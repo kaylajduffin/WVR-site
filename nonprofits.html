@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Nonprofits — WVR</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            wvr: {
+              green: '#10B981',
+              'green-dark': '#059669',
+              blue: '#3B82F6',
+              'blue-dark': '#2563EB',
+              dark: '#111827',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-white text-gray-800">
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-wvr-green rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold text-sm">W</span>
+        </div>
+        <span class="text-xl font-bold text-wvr-dark">WVR</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+        <a href="index.html" class="hover:text-wvr-green transition-colors">Home</a>
+        <a href="index.html#how-it-works" class="hover:text-wvr-green transition-colors">How It Works</a>
+        <a href="index.html#hope-score" class="hover:text-wvr-green transition-colors">Hope Score</a>
+        <a href="nonprofits.html" class="text-wvr-green font-semibold">Browse Nonprofits</a>
+      </div>
+      <button id="mobile-menu-btn" class="md:hidden p-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white px-6 py-4 space-y-3">
+      <a href="index.html" class="block text-sm font-medium text-gray-600 hover:text-wvr-green">Home</a>
+      <a href="index.html#how-it-works" class="block text-sm font-medium text-gray-600 hover:text-wvr-green">How It Works</a>
+      <a href="nonprofits.html" class="block text-sm font-medium text-wvr-green">Browse Nonprofits</a>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <section class="pt-28 pb-8 px-6 bg-gray-50 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold text-wvr-dark mb-2">Browse Verified Nonprofits</h1>
+      <p class="text-gray-500 text-lg">Discover organizations making real impact. Every nonprofit is IRS-verified with a live Hope Score.</p>
+    </div>
+  </section>
+
+  <!-- Search & Filters -->
+  <section class="sticky top-[73px] z-40 bg-white border-b border-gray-100 py-4 px-6 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-4">
+      <!-- Search -->
+      <div class="relative flex-1">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input id="search-input" type="text" placeholder="Search nonprofits by name, mission, or location..." class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-wvr-green/30 focus:border-wvr-green transition-all">
+      </div>
+      <!-- Category Filter -->
+      <select id="category-filter" class="px-4 py-3 border border-gray-200 rounded-xl text-sm text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-wvr-green/30 focus:border-wvr-green min-w-[180px]">
+        <option value="">All Categories</option>
+      </select>
+      <!-- Location Filter -->
+      <select id="location-filter" class="px-4 py-3 border border-gray-200 rounded-xl text-sm text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-wvr-green/30 focus:border-wvr-green min-w-[180px]">
+        <option value="">All Locations</option>
+      </select>
+      <!-- Sort -->
+      <select id="sort-filter" class="px-4 py-3 border border-gray-200 rounded-xl text-sm text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-wvr-green/30 focus:border-wvr-green min-w-[180px]">
+        <option value="hopeScore-desc">Hope Score: High to Low</option>
+        <option value="hopeScore-asc">Hope Score: Low to High</option>
+        <option value="name-asc">Name: A to Z</option>
+        <option value="name-desc">Name: Z to A</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- Results count & Grid -->
+  <section class="py-8 px-6">
+    <div class="max-w-7xl mx-auto">
+      <p id="results-count" class="text-sm text-gray-500 mb-6"></p>
+      <div id="nonprofit-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Cards injected by JS -->
+      </div>
+      <div id="no-results" class="hidden text-center py-20">
+        <p class="text-gray-400 text-lg mb-2">No nonprofits match your search.</p>
+        <p class="text-gray-400 text-sm">Try adjusting your filters or search terms.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-50 border-t border-gray-100 py-12 px-6 mt-8">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 bg-wvr-green rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-xs">W</span>
+          </div>
+          <span class="text-lg font-bold text-wvr-dark">World Value Revolution</span>
+        </div>
+        <div class="flex items-center gap-6 text-sm text-gray-500">
+          <a href="index.html" class="hover:text-wvr-green transition-colors">Home</a>
+          <a href="nonprofits.html" class="hover:text-wvr-green transition-colors">Nonprofits</a>
+        </div>
+      </div>
+      <div class="mt-8 pt-6 border-t border-gray-200 text-center text-xs text-gray-400">
+        &copy; 2026 World Value Revolution. Built at the Austin Christian University Accelerator.
+      </div>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script>
+    // Populate filter dropdowns
+    const categoryFilter = document.getElementById('category-filter');
+    const locationFilter = document.getElementById('location-filter');
+    getCategories().forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c; opt.textContent = c;
+      categoryFilter.appendChild(opt);
+    });
+    getLocations().forEach(l => {
+      const opt = document.createElement('option');
+      opt.value = l; opt.textContent = l;
+      locationFilter.appendChild(opt);
+    });
+
+    function getHopeScoreColor(score) {
+      if (score >= 90) return 'text-emerald-600 bg-emerald-50';
+      if (score >= 80) return 'text-blue-600 bg-blue-50';
+      if (score >= 70) return 'text-amber-600 bg-amber-50';
+      return 'text-gray-600 bg-gray-100';
+    }
+
+    function getHopeScoreRingColor(score) {
+      if (score >= 90) return '#10B981';
+      if (score >= 80) return '#3B82F6';
+      if (score >= 70) return '#F59E0B';
+      return '#9CA3AF';
+    }
+
+    function renderCard(np) {
+      const ringColor = getHopeScoreRingColor(np.hopeScore);
+      const dashOffset = 100 - np.hopeScore;
+      return `
+        <a href="profile.html?id=${np.id}" class="group block bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-lg hover:border-gray-200 transition-all duration-200">
+          <div class="relative h-48 overflow-hidden">
+            <img src="${np.photo}" alt="${np.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <div class="absolute top-3 left-3">
+              <span class="inline-block px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-semibold text-gray-700">${np.category}</span>
+            </div>
+          </div>
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div class="flex items-center gap-3 min-w-0">
+                <img src="${np.logo}" alt="" class="w-10 h-10 rounded-lg flex-shrink-0">
+                <div class="min-w-0">
+                  <h3 class="font-bold text-wvr-dark text-base truncate group-hover:text-wvr-green transition-colors">${np.name}</h3>
+                  <p class="text-xs text-gray-400">${np.location}</p>
+                </div>
+              </div>
+              <div class="flex-shrink-0 text-center">
+                <div class="relative w-14 h-14">
+                  <svg class="w-14 h-14 transform -rotate-90" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15.5" fill="none" stroke="#E5E7EB" stroke-width="2.5"/>
+                    <circle cx="18" cy="18" r="15.5" fill="none" stroke="${ringColor}" stroke-width="2.5" stroke-dasharray="100" stroke-dashoffset="${dashOffset}" stroke-linecap="round" pathLength="100"/>
+                  </svg>
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-sm font-extrabold text-wvr-dark">${np.hopeScore}</span>
+                  </div>
+                </div>
+                <p class="text-[10px] text-gray-400 mt-0.5">Hope Score</p>
+              </div>
+            </div>
+            <p class="text-sm text-gray-500 mb-4 line-clamp-2">${np.tagline}</p>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-400">Est. ${np.founded}</span>
+              <span class="text-sm font-semibold text-wvr-green group-hover:underline">Learn More &rarr;</span>
+            </div>
+          </div>
+        </a>
+      `;
+    }
+
+    function filterAndRender() {
+      const search = document.getElementById('search-input').value.toLowerCase();
+      const category = categoryFilter.value;
+      const location = locationFilter.value;
+      const sort = document.getElementById('sort-filter').value;
+
+      let filtered = nonprofits.filter(np => {
+        const matchSearch = !search ||
+          np.name.toLowerCase().includes(search) ||
+          np.tagline.toLowerCase().includes(search) ||
+          np.description.toLowerCase().includes(search) ||
+          np.location.toLowerCase().includes(search) ||
+          np.category.toLowerCase().includes(search);
+        const matchCategory = !category || np.category === category;
+        const matchLocation = !location || np.location === location;
+        return matchSearch && matchCategory && matchLocation;
+      });
+
+      // Sort
+      const [field, dir] = sort.split('-');
+      filtered.sort((a, b) => {
+        let valA = a[field], valB = b[field];
+        if (typeof valA === 'string') valA = valA.toLowerCase();
+        if (typeof valB === 'string') valB = valB.toLowerCase();
+        if (dir === 'asc') return valA > valB ? 1 : -1;
+        return valA < valB ? 1 : -1;
+      });
+
+      const grid = document.getElementById('nonprofit-grid');
+      const noResults = document.getElementById('no-results');
+      const count = document.getElementById('results-count');
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        noResults.classList.remove('hidden');
+        count.textContent = '0 nonprofits found';
+      } else {
+        noResults.classList.add('hidden');
+        grid.innerHTML = filtered.map(renderCard).join('');
+        count.textContent = `${filtered.length} nonprofit${filtered.length !== 1 ? 's' : ''} found`;
+      }
+    }
+
+    // Event listeners
+    document.getElementById('search-input').addEventListener('input', filterAndRender);
+    categoryFilter.addEventListener('change', filterAndRender);
+    locationFilter.addEventListener('change', filterAndRender);
+    document.getElementById('sort-filter').addEventListener('change', filterAndRender);
+
+    // Initial render
+    filterAndRender();
+
+    // Mobile menu
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+  </script>
+
+  <style>
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+</body>
+</html>
